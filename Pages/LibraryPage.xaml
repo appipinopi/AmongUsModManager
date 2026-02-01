@@ -78,6 +78,7 @@
                                         <MenuFlyoutItem Text="名前変更" Icon="Edit" Click="RenameMod_Click" Tag="{x:Bind}"/>
                                         <MenuFlyoutItem Text="GitHub連携" Icon="Link" Click="LinkGitHub_Click" Tag="{x:Bind}"/>
                                         <MenuFlyoutItem Text="今すぐアップデート" Icon="Refresh" Click="UpdateMod_Click" Tag="{x:Bind}"/>
+                                        <MenuFlyoutItem Text="DLL追加" Icon="Add" Click="AddDll_Click" Tag="{x:Bind}"/>
                                         <ToggleMenuFlyoutItem Text="自動アップデート" IsChecked="{x:Bind IsAutoUpdateEnabled, Mode=TwoWay}"/>
                                         <MenuFlyoutSeparator/>
                                         <MenuFlyoutItem Text="削除" Foreground="Red" Icon="Delete" Click="DeleteMod_Click" Tag="{x:Bind}"/>

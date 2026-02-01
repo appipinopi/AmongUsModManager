@@ -11,6 +11,8 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Data;
 using AmongUsModManager.Services;
 using AmongUsModManager.Models;
+using Windows.Storage.Pickers;
+using WinRT.Interop;
 
 namespace AmongUsModManager.Pages
 {
@@ -427,6 +429,36 @@ namespace AmongUsModManager.Pages
             config.VanillaPaths.RemoveAll(v => v.Path == mod.Path);
             ConfigService.Save(config);
             LoadLibrary();
+        }
+
+        private async void AddDll_Click(object sender, RoutedEventArgs e)
+        {
+            var mod = (sender as MenuFlyoutItem)?.Tag as VanillaPathInfo;
+            if (mod == null) return;
+
+            var picker = new FileOpenPicker();
+            picker.FileTypeFilter.Add(".dll");
+
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(App.MainWindowInstance);
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, hwnd);
+
+            var file = await picker.PickSingleFileAsync();
+            if (file != null)
+            {
+                string pluginsDir = Path.Combine(mod.Path, "BepInEx", "plugins");
+                Directory.CreateDirectory(pluginsDir);
+                string destPath = Path.Combine(pluginsDir, file.Name);
+                await Task.Run(() => File.Copy(file.Path, destPath, true));
+
+                var dialog = new ContentDialog
+                {
+                    Title = "DLL追加完了",
+                    Content = $"{file.Name} を {mod.Name} に追加しました。",
+                    CloseButtonText = "OK",
+                    XamlRoot = this.XamlRoot
+                };
+                await dialog.ShowAsync();
+            }
         }
     }
 
